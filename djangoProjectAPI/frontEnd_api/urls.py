@@ -1,7 +1,9 @@
-
 from django.urls import path
-from .views import frontEnd
+from . import views
 
 urlpatterns = [
-    path('frontend/', frontEnd.as_view(), name = 'frontEnd'),
+        path('frontend/', views.frontEnd, name='frontEnd'),
+        path('frontend/envioKAFKA', views.envioKAFKA, name='envioKAFKA'),
+
+   
 ]

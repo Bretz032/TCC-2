@@ -1,3 +1,4 @@
+from codecs import getencoder
 import numpy as np
 from .apps import ApiConfig
 from rest_framework.views import APIView
@@ -24,9 +25,15 @@ class WeightPrediction(APIView):
         lin_reg_model = ApiConfig.model
         weight_predicted = lin_reg_model.predict([[gender, height]])[0][0]
         weight_predicted = np.round(weight_predicted, 1)
-        response_dict = {"Peso deduzido (kg)": weight_predicted}
+
+        print(gender)
+        print(height)
+        response_dict = str(height)+";"+str(gender)
          
+        encoded_string = response_dict.encode()
+        byte_array = bytearray(encoded_string)
         #EnvioKafka
-        serialized_data = pickle.dumps(response_dict, pickle.HIGHEST_PROTOCOL)
-        producer.send('APITopic', serialized_data)
-        return Response(status=200)
+      ##  serialized_data = pickle.dumps(response_dict, pickle.HIGHEST_PROTOCOL)
+        
+        producer.send('APIML_DADOS', byte_array)
+        return Response("Peso deduzido: "+str(weight_predicted)+"KG")

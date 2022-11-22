@@ -1,15 +1,34 @@
+import string
 from django.shortcuts import render
-
-# Create your views here.
-        #EnvioKafka
-import numpy as np
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from django.http import HttpResponse
 from kafka import KafkaProducer
-import pickle #pickle converts data into byte array
+from kafka import KafkaConsumer
+from json import loads
+import json
+import pickle
+producer = KafkaProducer(bootstrap_servers='127.0.0.1:9092')
 
+def frontEnd(request):
+    return render(request, 'home.html')
 
-class frontEnd(APIView):
-    def get(self, request):
-        
-        return Response(status=200)
+def envioKAFKA(request):
+    if request.method == 'POST':
+        sexo=request.POST['sexo']
+        altura=request.POST['altura']
+
+        dados = {
+        'dados': {
+            'Sexo': sexo,
+             "Altura": altura,
+        },
+        }
+        serialized_data = pickle.dumps(dados, pickle.HIGHEST_PROTOCOL)
+        producer.send('APIML_NEW_REQUEST', serialized_data)
+
+        #args = {}
+        #text = "hello world"
+        #args['mytext'] = text
+        #return render(request, 'home.html', args)
+    else:
+        return HttpResponse('404')
+
