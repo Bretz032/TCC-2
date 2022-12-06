@@ -13,22 +13,23 @@ def frontEnd(request):
 
 def envioKAFKA(request):
     if request.method == 'POST':
-        sexo=request.POST['sexo']
-        altura=request.POST['altura']
+        sexo=request.POST['Sexo']
+        altura=request.POST['Altura']
 
         dados = {
         'dados': {
             'Sexo': sexo,
              "Altura": altura,
+              
         },
         }
         serialized_data = pickle.dumps(dados, pickle.HIGHEST_PROTOCOL)
         producer.send('APIML_NEW_REQUEST', serialized_data)
 
-        #args = {}
-        #text = "hello world"
-        #args['mytext'] = text
-        #return render(request, 'home.html', args)
+        args = {}
+    
+        args['dados'] = dados
+        return render(request, 'home.html', args)
     else:
         return HttpResponse('404')
 
