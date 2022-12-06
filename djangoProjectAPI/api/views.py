@@ -7,11 +7,13 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from kafka import KafkaProducer
 import pickle #pickle converts data into byte array
-
-
+from rest_framework.permissions import IsAuthenticated
+   
 class WeightPrediction(APIView):
-    def post(self, request):
-        #Iniciando Kafka
+ 
+   # permission_classes=[IsAuthenticated]
+    def post(self, request,):
+         #Iniciando Kafka
         producer = KafkaProducer(bootstrap_servers='127.0.0.1:9092')
      
         data = request.data
